@@ -1,5 +1,7 @@
 import curses
 import random
+import time
+import math
 from curses import wrapper
 
 strings = ["Hello my name is Rufus, I like to eat bacon!", "Let's talk on the phone at around two pm.", "Everybody needs a drink sometimes, it helps with your mood."]
@@ -28,7 +30,8 @@ def main(stdscr):
 
         # Start timer
         if first_stroke:
-            
+            start_time = time.time()
+            first_stroke = False
         
         # Get keystroke and determine correct / incorrect chars
         key = stdscr.getch()
@@ -43,10 +46,19 @@ def main(stdscr):
         elif key == 27:
             break
 
+        # calculate typing speed
+        correct_chars = input_colors.count(2)
+        elapsed_time = time.time() - start_time
+        chars_per_min = correct_chars / (elapsed_time / 60)
+
+        # 10 / 20s => 30 / min
+        # 10 / (60 / 20) => 10 / 3
+
         # display text
         stdscr.addstr(4, 5, "Copy this scentence!")
         stdscr.addstr(5, 5, chosen_string)
         stdscr.addstr(6, 5, "Chars / min: ")
+        stdscr.addstr(6, 19, str(int(round(chars_per_min))))
         stdscr.addstr(10, 5, "Press 'Esc' to exit.")
         
         # add typed text
